@@ -7,27 +7,44 @@ import RhythmIntro from "./pages/RhythmIntro.tsx";
 import TimeSignatures from "./pages/TimeSignatures.tsx";
 import RhythmToPitch from "./pages/RhythmToPitch.tsx";
 import { stopAllTones } from "./audio/audioEngine.ts";
+import { LanguageProvider, useLanguage, type Lang } from "./i18n/LanguageContext.tsx";
+import { common } from "./i18n/common.ts";
 
 export type Page = "what-is-music" | "what-is-a-note" | "harmony" | "twelve-notes" | "rhythm" | "time-signatures" | "rhythm-to-pitch";
 
-const PAGES: { key: Page; label: string }[] = [
-  { key: "what-is-music", label: "What is Music?" },
-  { key: "what-is-a-note", label: "What is a Note?" },
-  { key: "harmony", label: "Harmony" },
-  { key: "twelve-notes", label: "The 12 Notes" },
-  { key: "rhythm", label: "Rhythm" },
-  { key: "time-signatures", label: "Time Signatures" },
-  { key: "rhythm-to-pitch", label: "Rhythm → Pitch" },
+const PAGE_LABELS: Record<Page, Record<Lang, string>> = {
+  "what-is-music": { en: "What is Music?", ko: "음악이란 무엇인가?" },
+  "what-is-a-note": { en: "What is a Note?", ko: "음이란 무엇인가?" },
+  "harmony": { en: "Harmony", ko: "화성" },
+  "twelve-notes": { en: "The 12 Notes", ko: "12개의 음" },
+  "rhythm": { en: "Rhythm", ko: "리듬" },
+  "time-signatures": { en: "Time Signatures", ko: "박자표" },
+  "rhythm-to-pitch": { en: "Rhythm \u2192 Pitch", ko: "리듬 \u2192 음높이" },
+};
+
+const PAGE_KEYS: Page[] = [
+  "what-is-music",
+  "what-is-a-note",
+  "harmony",
+  "twelve-notes",
+  "rhythm",
+  "time-signatures",
+  "rhythm-to-pitch",
 ];
+
+const PAGE_KEY_SET = new Set(PAGE_KEYS);
 
 const FADE_MS = 180;
 
-const PAGE_KEYS = new Set(PAGES.map((p) => p.key));
+const TITLE: Record<Lang, string> = {
+  en: "Learn Music Theory",
+  ko: "음악 이론 배우기",
+};
 
 function pageFromHash(): Page {
   const hash = window.location.hash.replace("#", "");
-  if (PAGE_KEYS.has(hash as Page)) return hash as Page;
-  return PAGES[0].key;
+  if (PAGE_KEY_SET.has(hash as Page)) return hash as Page;
+  return PAGE_KEYS[0];
 }
 
 function PageContent({ page }: { page: Page }) {
@@ -42,7 +59,8 @@ function PageContent({ page }: { page: Page }) {
   }
 }
 
-export default function App() {
+function AppInner() {
+  const { lang, setLang } = useLanguage();
   const [page, setPage] = useState<Page>(pageFromHash);
   const [displayedPage, setDisplayedPage] = useState<Page>(pageFromHash);
   const [fading, setFading] = useState(false);
@@ -79,9 +97,9 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [page]);
 
-  const idx = PAGES.findIndex((p) => p.key === page);
-  const prev = idx > 0 ? PAGES[idx - 1] : null;
-  const next = idx < PAGES.length - 1 ? PAGES[idx + 1] : null;
+  const idx = PAGE_KEYS.indexOf(page);
+  const prev = idx > 0 ? PAGE_KEYS[idx - 1] : null;
+  const next = idx < PAGE_KEYS.length - 1 ? PAGE_KEYS[idx + 1] : null;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -90,13 +108,19 @@ export default function App() {
         <button
           className="lg:hidden flex flex-col justify-center gap-[5px] w-8 h-8 shrink-0"
           onClick={() => setSidebarOpen((prev) => !prev)}
-          aria-label="Toggle navigation"
+          aria-label={common[lang].toggleNav}
         >
           <span className="block h-0.5 w-5 bg-gray-600 rounded" />
           <span className="block h-0.5 w-5 bg-gray-600 rounded" />
           <span className="block h-0.5 w-5 bg-gray-600 rounded" />
         </button>
-        <h1 className="text-xl font-bold text-gray-900">Learn Music Theory</h1>
+        <h1 className="text-xl font-bold text-gray-900">{TITLE[lang]}</h1>
+        <button
+          onClick={() => setLang(lang === "en" ? "ko" : "en")}
+          className="ml-auto px-3 py-1.5 rounded-lg text-sm font-medium border border-gray-200 hover:bg-gray-100 transition-colors text-gray-600 shrink-0"
+        >
+          {lang === "en" ? "한국어" : "EN"}
+        </button>
       </header>
 
       <div className="flex flex-1">
@@ -115,22 +139,22 @@ export default function App() {
           } lg:sticky lg:translate-x-0 lg:bg-gray-50/50`}
         >
           <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
-            Contents
+            {common[lang].contents}
           </div>
           <ul className="space-y-1">
-            {PAGES.map((p, i) => (
-              <li key={p.key}>
+            {PAGE_KEYS.map((key, i) => (
+              <li key={key}>
                 <a
-                  href={`#${p.key}`}
-                  onClick={(e) => { e.preventDefault(); navigate(p.key); }}
+                  href={`#${key}`}
+                  onClick={(e) => { e.preventDefault(); navigate(key); }}
                   className={`block px-3 py-2 rounded-lg text-sm transition-colors ${
-                    page === p.key
+                    page === key
                       ? "bg-indigo-50 text-indigo-700 font-medium"
                       : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
                   <span className="text-gray-400 mr-2">{i + 1}.</span>
-                  {p.label}
+                  {PAGE_LABELS[key][lang]}
                 </a>
               </li>
             ))}
@@ -153,18 +177,18 @@ export default function App() {
             <div className={`flex mt-12 pt-6 border-t border-gray-200 ${prev && next ? "justify-between" : prev ? "justify-start" : "justify-end"}`}>
               {prev && (
                 <button
-                  onClick={() => navigate(prev.key)}
+                  onClick={() => navigate(prev)}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900 transition-colors"
                 >
-                  <span aria-hidden="true">&larr;</span> {prev.label}
+                  <span aria-hidden="true">&larr;</span> {PAGE_LABELS[prev][lang]}
                 </button>
               )}
               {next && (
                 <button
-                  onClick={() => navigate(next.key)}
+                  onClick={() => navigate(next)}
                   className="flex items-center gap-2 px-4 py-2 rounded-lg bg-indigo-500 text-white hover:bg-indigo-600 transition-colors"
                 >
-                  {next.label} <span aria-hidden="true">&rarr;</span>
+                  {PAGE_LABELS[next][lang]} <span aria-hidden="true">&rarr;</span>
                 </button>
               )}
             </div>
@@ -172,5 +196,13 @@ export default function App() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <LanguageProvider>
+      <AppInner />
+    </LanguageProvider>
   );
 }

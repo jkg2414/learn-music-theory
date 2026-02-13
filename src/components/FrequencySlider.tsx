@@ -1,5 +1,7 @@
 import { useState, useCallback, useRef, useEffect } from "react";
 import { startTone, stopTone, setFrequency } from "../audio/audioEngine.ts";
+import { useLanguage } from "../i18n/LanguageContext.tsx";
+import { common } from "../i18n/common.ts";
 
 const NOTE_NAMES_SHARP = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
@@ -53,6 +55,9 @@ export default function FrequencySlider({
   onFrequencyChange,
   externalControl = false,
 }: FrequencySliderProps) {
+  const { lang } = useLanguage();
+  const t = common[lang];
+
   const [frequency, setFrequencyState] = useState(initialFrequency);
   const [internalPlaying, setInternalPlaying] = useState(false);
   const isPlaying = externalControl ? (externalIsPlaying ?? false) : internalPlaying;
@@ -199,13 +204,13 @@ export default function FrequencySlider({
                 : "bg-indigo-500 hover:bg-indigo-600 text-white"
             }`}
           >
-            {isPlaying ? "Stop" : "Play"}
+            {isPlaying ? t.stop : t.play}
           </button>
         )}
 
         <div className="text-xl font-mono text-gray-900 tabular-nums">
           {frequency.toFixed(1)}{" "}
-          <span className="text-sm text-gray-400">Hz</span>
+          <span className="text-sm text-gray-400">{t.hz}</span>
         </div>
 
         <div className="text-base text-indigo-500 font-semibold ml-auto">
@@ -225,8 +230,8 @@ export default function FrequencySlider({
         className="w-full accent-indigo-500"
       />
       <div className="flex justify-between text-xs text-gray-400">
-        <span>{MIN_FREQ} Hz</span>
-        <span>{MAX_FREQ} Hz</span>
+        <span>{MIN_FREQ} {t.hz}</span>
+        <span>{MAX_FREQ} {t.hz}</span>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { playClick } from "../audio/audioEngine.ts";
+import { useLanguage } from "../i18n/LanguageContext.tsx";
+import { common } from "../i18n/common.ts";
 
 interface BeatVisualizerProps {
   beats: number;
@@ -16,6 +18,9 @@ export default function BeatVisualizer({
   showBpmSlider = false,
   label,
 }: BeatVisualizerProps) {
+  const { lang } = useLanguage();
+  const t = common[lang];
+
   const [internalBpm, setInternalBpm] = useState(100);
   const bpm = externalBpm ?? internalBpm;
   const [playing, setPlaying] = useState(false);
@@ -106,7 +111,7 @@ export default function BeatVisualizer({
               </div>
               {isAccent && (
                 <span className="text-[10px] text-gray-400 font-medium">
-                  accent
+                  {t.accent}
                 </span>
               )}
             </div>
@@ -124,12 +129,12 @@ export default function BeatVisualizer({
               : "bg-indigo-500 hover:bg-indigo-600 text-white"
           }`}
         >
-          {playing ? "Stop" : "Play"}
+          {playing ? t.stop : t.play}
         </button>
 
         {showBpmSlider && (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-500">BPM</span>
+            <span className="text-sm text-gray-500">{t.bpm}</span>
             <input
               type="range"
               min={40}

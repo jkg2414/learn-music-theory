@@ -4,6 +4,8 @@ import {
   setClickTrainRate,
   stopClickTrain,
 } from "../audio/audioEngine.ts";
+import { useLanguage } from "../i18n/LanguageContext.tsx";
+import { common } from "../i18n/common.ts";
 
 const NOTE_NAMES = [
   "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B",
@@ -34,6 +36,9 @@ interface SingleClickTrainProps {
 }
 
 export default function SingleClickTrain({ id = "solo" }: SingleClickTrainProps) {
+  const { lang } = useLanguage();
+  const t = common[lang];
+
   const [rate, setRate] = useState(2);
   const [playing, setPlaying] = useState(false);
   const rateRef = useRef(rate);
@@ -69,9 +74,9 @@ export default function SingleClickTrain({ id = "solo" }: SingleClickTrainProps)
 
   let rateLabel: string;
   if (rate < 20) {
-    rateLabel = `${rate.toFixed(1)} clicks/sec`;
+    rateLabel = `${rate.toFixed(1)} ${t.clicksSec}`;
   } else {
-    rateLabel = `${rate.toFixed(1)} Hz — ${freqToNote(rate)}`;
+    rateLabel = `${rate.toFixed(1)} ${t.hz} — ${freqToNote(rate)}`;
   }
 
   return (
@@ -85,7 +90,7 @@ export default function SingleClickTrain({ id = "solo" }: SingleClickTrainProps)
               : "bg-indigo-500 hover:bg-indigo-600 text-white"
           }`}
         >
-          {playing ? "Stop" : "Play"}
+          {playing ? t.stop : t.play}
         </button>
         <div className="text-right">
           <div className="font-mono text-gray-900 font-medium">{rateLabel}</div>
@@ -102,8 +107,8 @@ export default function SingleClickTrain({ id = "solo" }: SingleClickTrainProps)
         className="w-full accent-indigo-500"
       />
       <div className="flex justify-between text-xs text-gray-400">
-        <span>Slow (rhythm)</span>
-        <span>Fast (pitch)</span>
+        <span>{t.slowRhythm}</span>
+        <span>{t.fastPitch}</span>
       </div>
     </div>
   );
