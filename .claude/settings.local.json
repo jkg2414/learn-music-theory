@@ -15,7 +15,8 @@
       "Bash(npm run dev:*)",
       "Bash(git init:*)",
       "Bash(git commit --amend -m \"$\\(cat <<''EOF''\nTHIS IS A CHECKPOINT, LOOKING GOOD SO FAR\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
-      "Bash(git add -A)"
+      "Bash(git add -A)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nRemove unused components that were causing build failure\n\nDelete NavBar, Controls, and old section components \\(FrequencyExplorer,\nScaleExplorer, ChordExplorer, IntervalTrainer\\) left over from pre-redesign.\nNavBar.tsx referenced stale Page type values, breaking TypeScript compilation.\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
     ]
   }
 }
