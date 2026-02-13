@@ -41,6 +41,11 @@ const TITLE: Record<Lang, string> = {
   ko: "음악 이론 배우기",
 };
 
+const AUDIO_HINT: Record<Lang, string> = {
+  en: "This site uses audio. On iOS, make sure the silent mode switch is off.",
+  ko: "이 사이트는 오디오를 사용합니다. iOS에서는 무음 모드 스위치를 꺼 주세요.",
+};
+
 function pageFromHash(): Page {
   const hash = window.location.hash.replace("#", "");
   if (PAGE_KEY_SET.has(hash as Page)) return hash as Page;
@@ -171,6 +176,9 @@ function AppInner() {
               transition: `opacity ${FADE_MS}ms ease-in-out`,
             }}
           >
+            <p className="text-xs text-gray-400 mb-4 sm:hidden">
+              {AUDIO_HINT[lang]}
+            </p>
             <PageContent page={displayedPage} />
 
             {/* Prev / Next */}
