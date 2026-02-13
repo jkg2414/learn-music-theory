@@ -268,7 +268,7 @@ export default function RhythmToPitch() {
         </div>
 
         {/* Voice info */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="bg-white border border-gray-100 rounded-lg p-3">
             <div className="text-xs text-gray-400 mb-1">Voice 1 (high click)</div>
             <div className="text-indigo-600 font-mono font-medium">
@@ -312,11 +312,11 @@ export default function RhythmToPitch() {
             <span className="text-xs font-semibold text-indigo-600 w-14">
               Voice 1
             </span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {Array.from({ length: numerator }, (_, i) => (
                 <div
                   key={i}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-75 ${
+                  className={`w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-75 ${
                     i === beat1
                       ? "bg-indigo-500 text-white shadow-md shadow-indigo-200 scale-110"
                       : "bg-indigo-100 text-indigo-400"
@@ -331,11 +331,11 @@ export default function RhythmToPitch() {
             <span className="text-xs font-semibold text-amber-600 w-14">
               Voice 2
             </span>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {Array.from({ length: denominator }, (_, i) => (
                 <div
                   key={i}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-75 ${
+                  className={`w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-75 ${
                     i === beat2
                       ? "bg-amber-500 text-white shadow-md shadow-amber-200 scale-110"
                       : "bg-amber-100 text-amber-400"

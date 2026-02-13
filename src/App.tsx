@@ -46,6 +46,7 @@ export default function App() {
   const [page, setPage] = useState<Page>(pageFromHash);
   const [displayedPage, setDisplayedPage] = useState<Page>(pageFromHash);
   const [fading, setFading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const pendingPage = useRef<Page | null>(null);
 
   const navigate = (newPage: Page) => {
@@ -53,6 +54,7 @@ export default function App() {
     stopAllTones();
     window.location.hash = newPage;
     setPage(newPage);
+    setSidebarOpen(false);
   };
 
   // Sync state when user navigates with browser back/forward
@@ -84,13 +86,34 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top bar */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200 px-6 py-3">
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-gray-200 px-4 sm:px-6 py-3 flex items-center gap-3">
+        <button
+          className="lg:hidden flex flex-col justify-center gap-[5px] w-8 h-8 shrink-0"
+          onClick={() => setSidebarOpen((prev) => !prev)}
+          aria-label="Toggle navigation"
+        >
+          <span className="block h-0.5 w-5 bg-gray-600 rounded" />
+          <span className="block h-0.5 w-5 bg-gray-600 rounded" />
+          <span className="block h-0.5 w-5 bg-gray-600 rounded" />
+        </button>
         <h1 className="text-xl font-bold text-gray-900">Learn Music Theory</h1>
       </header>
 
       <div className="flex flex-1">
-        {/* Sidebar */}
-        <nav className="sticky top-[53px] h-[calc(100vh-53px)] w-56 shrink-0 border-r border-gray-200 bg-gray-50/50 p-4 overflow-y-auto">
+        {/* Backdrop overlay (mobile only) */}
+        {sidebarOpen && (
+          <div
+            className="lg:hidden fixed inset-0 z-40 bg-black/30"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
+        {/* Sidebar: fixed overlay on mobile, sticky on lg+ */}
+        <nav
+          className={`fixed top-[53px] left-0 z-50 h-[calc(100vh-53px)] w-56 shrink-0 border-r border-gray-200 bg-gray-50 p-4 overflow-y-auto transition-transform duration-200 ease-in-out ${
+            sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          } lg:sticky lg:translate-x-0 lg:bg-gray-50/50`}
+        >
           <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">
             Contents
           </div>
@@ -117,7 +140,7 @@ export default function App() {
         {/* Main content */}
         <main className="flex-1 min-w-0">
           <div
-            className="mx-auto w-full px-8 py-8"
+            className="mx-auto w-full px-4 sm:px-8 py-6 sm:py-8"
             style={{
               maxWidth: "800px",
               opacity: fading ? 0 : 1,

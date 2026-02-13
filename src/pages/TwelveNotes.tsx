@@ -25,12 +25,16 @@ export default function TwelveNotes() {
       </div>
 
       <div>
-        <PianoKeyboard
-          startOctave={3}
-          numOctaves={3}
-          highlightedNotes={[]}
-          onNoteClick={handleNoteClick}
-        />
+        <div className="overflow-x-auto rounded-lg -mx-1 px-1">
+          <div className="min-w-[560px]">
+            <PianoKeyboard
+              startOctave={3}
+              numOctaves={3}
+              highlightedNotes={[]}
+              onNoteClick={handleNoteClick}
+            />
+          </div>
+        </div>
         <p className="text-xs text-gray-400 mt-2">
           Click any key to hear the note.
         </p>

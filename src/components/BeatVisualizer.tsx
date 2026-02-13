@@ -74,11 +74,11 @@ export default function BeatVisualizer({
       )}
 
       {/* Beat circles */}
-      <div className="flex items-end justify-center gap-3">
+      <div className="flex flex-wrap items-end justify-center gap-2 sm:gap-3">
         {Array.from({ length: beats }, (_, i) => {
           const isAccent = i === 0;
           const isActive = i === currentBeat;
-          const size = isAccent ? "w-12 h-12" : "w-10 h-10";
+          const size = isAccent ? "w-9 h-9 sm:w-12 sm:h-12" : "w-8 h-8 sm:w-10 sm:h-10";
 
           let bg: string;
           if (isActive && isAccent) {
