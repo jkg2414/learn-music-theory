@@ -106,25 +106,160 @@ export function stopAll(): void {
   synth.releaseAll();
 }
 
-// --- Frequency Explorer: continuous oscillator for arbitrary frequencies ---
+// --- Multi-oscillator support for frequency sliders ---
 
 const toneVolume = new Tone.Volume(-12).toDestination();
-const oscillator = new Tone.Oscillator({ type: "sine", frequency: 440 }).connect(toneVolume);
 
-export async function startTone(freq: number): Promise<void> {
+const oscillators = new Map<string, Tone.Oscillator>();
+
+function getOscillator(id: string): Tone.Oscillator {
+  let osc = oscillators.get(id);
+  if (!osc) {
+    osc = new Tone.Oscillator({ type: "sine", frequency: 440 }).connect(toneVolume);
+    oscillators.set(id, osc);
+  }
+  return osc;
+}
+
+export async function startTone(freq: number, id = "default"): Promise<void> {
   await ensureStarted();
-  oscillator.frequency.value = freq;
-  if (oscillator.state !== "started") {
-    oscillator.start();
+  const osc = getOscillator(id);
+  osc.frequency.value = freq;
+  if (osc.state !== "started") {
+    osc.start();
   }
 }
 
-export function stopTone(): void {
-  if (oscillator.state === "started") {
-    oscillator.stop();
+export function stopTone(id = "default"): void {
+  const osc = oscillators.get(id);
+  if (osc && osc.state === "started") {
+    osc.stop();
   }
 }
 
-export function setFrequency(freq: number): void {
-  oscillator.frequency.value = freq;
+export function setFrequency(freq: number, id = "default"): void {
+  const osc = oscillators.get(id);
+  if (osc) {
+    osc.frequency.value = freq;
+  }
+}
+
+export function stopAllTones(): void {
+  oscillators.forEach((osc) => {
+    if (osc.state === "started") osc.stop();
+  });
+  stopAllClickTrains();
+}
+
+// --- Click train: sample-accurate pulse scheduling at any speed ---
+
+interface ClickTrainState {
+  running: boolean;
+  rate: number;
+  nextTime: number;
+  timeout: number | null;
+  buffer: AudioBuffer;
+  gainNode: GainNode;
+  audioCtx: AudioContext;
+}
+
+const clickTrains = new Map<string, ClickTrainState>();
+
+function createClickBuffer(audioCtx: AudioContext, clickFreq: number): AudioBuffer {
+  const duration = 0.004; // 4ms impulse
+  const sampleRate = audioCtx.sampleRate;
+  const length = Math.ceil(duration * sampleRate);
+  const buffer = audioCtx.createBuffer(1, length, sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < length; i++) {
+    const t = i / sampleRate;
+    // Exponential decay envelope * sine burst
+    const env = Math.exp(-t / (duration * 0.3));
+    data[i] = Math.sin(2 * Math.PI * clickFreq * t) * env * 0.35;
+  }
+  return buffer;
+}
+
+function scheduleClickTrain(train: ClickTrainState) {
+  if (!train.running) return;
+  const now = train.audioCtx.currentTime;
+  const lookAhead = 0.12; // schedule 120ms ahead
+
+  while (train.nextTime < now + lookAhead) {
+    const source = train.audioCtx.createBufferSource();
+    source.buffer = train.buffer;
+    source.connect(train.gainNode);
+    source.start(Math.max(train.nextTime, now));
+    train.nextTime += 1 / train.rate;
+  }
+
+  train.timeout = window.setTimeout(() => scheduleClickTrain(train), 50);
+}
+
+export async function startClickTrain(id: string, rate: number, isHigh: boolean): Promise<void> {
+  await ensureStarted();
+  const audioCtx = Tone.getContext().rawContext as AudioContext;
+
+  let train = clickTrains.get(id);
+  if (!train) {
+    const clickFreq = isHigh ? 1500 : 1000;
+    const buffer = createClickBuffer(audioCtx, clickFreq);
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0.5;
+    gainNode.connect(audioCtx.destination);
+    train = { running: false, rate, nextTime: 0, timeout: null, buffer, gainNode, audioCtx };
+    clickTrains.set(id, train);
+  }
+
+  train.rate = rate;
+  train.running = true;
+  train.nextTime = audioCtx.currentTime;
+  scheduleClickTrain(train);
+}
+
+export function setClickTrainRate(id: string, rate: number): void {
+  const train = clickTrains.get(id);
+  if (train) train.rate = rate;
+}
+
+export function stopClickTrain(id: string): void {
+  const train = clickTrains.get(id);
+  if (train) {
+    train.running = false;
+    if (train.timeout !== null) {
+      clearTimeout(train.timeout);
+      train.timeout = null;
+    }
+  }
+}
+
+export function stopAllClickTrains(): void {
+  clickTrains.forEach((train) => {
+    train.running = false;
+    if (train.timeout !== null) {
+      clearTimeout(train.timeout);
+      train.timeout = null;
+    }
+  });
+}
+
+// --- Metronome click ---
+
+const clickHigh = new Tone.Synth({
+  oscillator: { type: "sine" },
+  envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 },
+}).toDestination();
+
+const clickLow = new Tone.Synth({
+  oscillator: { type: "sine" },
+  envelope: { attack: 0.001, decay: 0.05, sustain: 0, release: 0.05 },
+}).toDestination();
+
+export async function playClick(accent: boolean): Promise<void> {
+  await ensureStarted();
+  if (accent) {
+    clickHigh.triggerAttackRelease("G5", "32n");
+  } else {
+    clickLow.triggerAttackRelease("C5", "32n");
+  }
 }

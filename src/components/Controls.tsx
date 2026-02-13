@@ -18,7 +18,7 @@ export default function Controls({
   return (
     <div className="flex items-center gap-4 text-sm">
       <label className="flex items-center gap-2">
-        <span className="text-gray-400">BPM</span>
+        <span className="text-gray-500">BPM</span>
         <input
           type="range"
           min={40}
@@ -31,9 +31,9 @@ export default function Controls({
       </label>
 
       <div className="flex items-center gap-1">
-        <span className="text-gray-400">Oct</span>
+        <span className="text-gray-500">Oct</span>
         <button
-          className="px-2 py-0.5 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-40"
+          className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-40"
           onClick={() => setOctave(octave - 1)}
           disabled={octave <= 2}
         >
@@ -41,7 +41,7 @@ export default function Controls({
         </button>
         <span className="w-4 text-center">{octave}</span>
         <button
-          className="px-2 py-0.5 rounded bg-gray-700 hover:bg-gray-600 disabled:opacity-40"
+          className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200 disabled:opacity-40"
           onClick={() => setOctave(octave + 1)}
           disabled={octave >= 6}
         >
@@ -50,16 +50,16 @@ export default function Controls({
       </div>
 
       <div className="flex items-center gap-1">
-        <span className="text-gray-400">Trans</span>
+        <span className="text-gray-500">Trans</span>
         <button
-          className="px-2 py-0.5 rounded bg-gray-700 hover:bg-gray-600"
+          className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200"
           onClick={() => setTransposition(transposition - 1)}
         >
           -
         </button>
         <span className="w-6 text-center">{transposition > 0 ? `+${transposition}` : transposition}</span>
         <button
-          className="px-2 py-0.5 rounded bg-gray-700 hover:bg-gray-600"
+          className="px-2 py-0.5 rounded bg-gray-100 hover:bg-gray-200"
           onClick={() => setTransposition(transposition + 1)}
         >
           +

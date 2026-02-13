@@ -103,11 +103,11 @@ export default function IntervalTrainer({ octave, bpm, transposition }: Interval
     return (
       <section id="ear-training" className="scroll-mt-16">
         <h2 className="text-2xl font-bold mb-4">Ear Training: Intervals</h2>
-        <div className="bg-gray-800 rounded-lg p-8 text-center max-w-md mx-auto">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center max-w-md mx-auto">
           <p className="text-4xl font-bold mb-2">
             {score} / {totalQuestions}
           </p>
-          <p className="text-gray-400 mb-6">
+          <p className="text-gray-500 mb-6">
             {score === totalQuestions
               ? "Perfect score!"
               : score >= 7
@@ -118,7 +118,7 @@ export default function IntervalTrainer({ octave, bpm, transposition }: Interval
           </p>
           <button
             onClick={restart}
-            className="px-6 py-2 rounded bg-blue-600 hover:bg-blue-500 text-white font-medium"
+            className="px-6 py-2 rounded bg-blue-500 hover:bg-blue-600 text-white font-medium"
           >
             Try Again
           </button>
@@ -131,12 +131,12 @@ export default function IntervalTrainer({ octave, bpm, transposition }: Interval
     <section id="ear-training" className="scroll-mt-16">
       <h2 className="text-2xl font-bold mb-4">Ear Training: Intervals</h2>
 
-      <div className="bg-gray-800 rounded-lg p-6 max-w-md mx-auto">
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 max-w-md mx-auto">
         <div className="flex justify-between items-center mb-4">
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-gray-500">
             Question {questionNumber} / {totalQuestions}
           </span>
-          <span className="text-sm text-gray-400">
+          <span className="text-sm text-gray-500">
             Score: {score}
           </span>
         </div>
@@ -144,12 +144,12 @@ export default function IntervalTrainer({ octave, bpm, transposition }: Interval
         <div className="text-center mb-6">
           <button
             onClick={handlePlayInterval}
-            className="px-6 py-3 rounded-lg bg-purple-600 hover:bg-purple-500 text-white font-medium text-lg"
+            className="px-6 py-3 rounded-lg bg-purple-500 hover:bg-purple-600 text-white font-medium text-lg"
           >
             Play Interval
           </button>
           {currentQuestion && (
-            <p className="text-xs text-gray-500 mt-2">
+            <p className="text-xs text-gray-400 mt-2">
               Starting from {currentQuestion.prompt.rootNote}
             </p>
           )}
@@ -160,14 +160,14 @@ export default function IntervalTrainer({ octave, bpm, transposition }: Interval
             let btnClass = "px-4 py-3 rounded-lg text-sm font-medium transition-colors ";
             if (selectedAnswer !== null) {
               if (choice === currentQuestion.correctAnswer) {
-                btnClass += "bg-green-600 text-white";
+                btnClass += "bg-green-500 text-white";
               } else if (choice === selectedAnswer && !isCorrect) {
-                btnClass += "bg-red-600 text-white";
+                btnClass += "bg-red-500 text-white";
               } else {
-                btnClass += "bg-gray-700 text-gray-400";
+                btnClass += "bg-gray-100 text-gray-400";
               }
             } else {
-              btnClass += "bg-gray-700 hover:bg-gray-600 text-white cursor-pointer";
+              btnClass += "bg-gray-100 hover:bg-gray-200 text-gray-900 cursor-pointer";
             }
 
             return (

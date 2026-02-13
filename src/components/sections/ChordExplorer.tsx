@@ -65,11 +65,11 @@ export default function ChordExplorer({ octave, bpm, transposition }: ChordExplo
 
       <div className="flex flex-wrap gap-4 mb-4">
         <label className="flex items-center gap-2">
-          <span className="text-gray-400">Root</span>
+          <span className="text-gray-500">Root</span>
           <select
             value={rootIdx}
             onChange={(e) => setRootIdx(Number(e.target.value))}
-            className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-white"
+            className="bg-white border border-gray-300 rounded px-3 py-1.5 text-gray-900"
           >
             {NOTE_NAMES.map((note, i) => (
               <option key={note} value={i}>{note}</option>
@@ -78,11 +78,11 @@ export default function ChordExplorer({ octave, bpm, transposition }: ChordExplo
         </label>
 
         <label className="flex items-center gap-2">
-          <span className="text-gray-400">Type</span>
+          <span className="text-gray-500">Type</span>
           <select
             value={chordIdx}
             onChange={(e) => { setChordIdx(Number(e.target.value)); setInversion(0); }}
-            className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-white"
+            className="bg-white border border-gray-300 rounded px-3 py-1.5 text-gray-900"
           >
             {CHORDS.map((c, i) => (
               <option key={c.name} value={i}>{c.name}</option>
@@ -91,11 +91,11 @@ export default function ChordExplorer({ octave, bpm, transposition }: ChordExplo
         </label>
 
         <label className="flex items-center gap-2">
-          <span className="text-gray-400">Inversion</span>
+          <span className="text-gray-500">Inversion</span>
           <select
             value={inversion}
             onChange={(e) => setInversion(Number(e.target.value))}
-            className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-white"
+            className="bg-white border border-gray-300 rounded px-3 py-1.5 text-gray-900"
           >
             {Array.from({ length: maxInversion + 1 }, (_, i) => (
               <option key={i} value={i}>{inversionLabel(i)}</option>
@@ -106,13 +106,13 @@ export default function ChordExplorer({ octave, bpm, transposition }: ChordExplo
         <div className="flex gap-2">
           <button
             onClick={isPlaying ? stop : handlePlayChord}
-            className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium"
+            className="px-4 py-1.5 rounded bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium"
           >
             {isPlaying ? "Stop" : "Play Chord"}
           </button>
           <button
             onClick={isPlaying ? stop : handleArpeggiate}
-            className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium"
+            className="px-4 py-1.5 rounded bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium"
             disabled={isPlaying}
           >
             Arpeggiate
@@ -128,8 +128,8 @@ export default function ChordExplorer({ octave, bpm, transposition }: ChordExplo
         onNoteClick={handleNoteClick}
       />
 
-      <div className="mt-3 text-sm text-gray-400">
-        <span className="font-medium text-gray-300">
+      <div className="mt-3 text-sm text-gray-500">
+        <span className="font-medium text-gray-700">
           {root}{chord.symbol}
           {inversion > 0 ? ` (${inversionLabel(inversion)})` : ""}:
         </span>{" "}
@@ -137,15 +137,15 @@ export default function ChordExplorer({ octave, bpm, transposition }: ChordExplo
       </div>
 
       {/* Progressions */}
-      <div className="mt-8 pt-6 border-t border-gray-800">
+      <div className="mt-8 pt-6 border-t border-gray-200">
         <h3 className="text-lg font-semibold mb-3">Chord Progressions</h3>
         <div className="flex flex-wrap items-center gap-4">
           <label className="flex items-center gap-2">
-            <span className="text-gray-400">Progression</span>
+            <span className="text-gray-500">Progression</span>
             <select
               value={progressionIdx}
               onChange={(e) => setProgressionIdx(Number(e.target.value))}
-              className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-white"
+              className="bg-white border border-gray-300 rounded px-3 py-1.5 text-gray-900"
             >
               {PROGRESSIONS.map((p, i) => (
                 <option key={p.name} value={i}>{p.name}</option>
@@ -154,11 +154,11 @@ export default function ChordExplorer({ octave, bpm, transposition }: ChordExplo
           </label>
           <button
             onClick={isPlaying ? stop : handlePlayProgression}
-            className="px-4 py-1.5 rounded bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium"
+            className="px-4 py-1.5 rounded bg-purple-500 hover:bg-purple-600 text-white text-sm font-medium"
           >
             {isPlaying ? "Stop" : "Play Progression"}
           </button>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-gray-400">
             in {root}: {PROGRESSIONS[progressionIdx].numerals.join(" → ")}
           </span>
         </div>

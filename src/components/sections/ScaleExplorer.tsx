@@ -49,11 +49,11 @@ export default function ScaleExplorer({ octave, bpm, transposition }: ScaleExplo
 
       <div className="flex flex-wrap gap-4 mb-4">
         <label className="flex items-center gap-2">
-          <span className="text-gray-400">Root</span>
+          <span className="text-gray-500">Root</span>
           <select
             value={rootIdx}
             onChange={(e) => setRootIdx(Number(e.target.value))}
-            className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-white"
+            className="bg-white border border-gray-300 rounded px-3 py-1.5 text-gray-900"
           >
             {NOTE_NAMES.map((note, i) => (
               <option key={note} value={i}>{note}</option>
@@ -62,11 +62,11 @@ export default function ScaleExplorer({ octave, bpm, transposition }: ScaleExplo
         </label>
 
         <label className="flex items-center gap-2">
-          <span className="text-gray-400">Scale</span>
+          <span className="text-gray-500">Scale</span>
           <select
             value={scaleIdx}
             onChange={(e) => setScaleIdx(Number(e.target.value))}
-            className="bg-gray-800 border border-gray-700 rounded px-3 py-1.5 text-white"
+            className="bg-white border border-gray-300 rounded px-3 py-1.5 text-gray-900"
           >
             {SCALES.map((s, i) => (
               <option key={s.name} value={i}>{s.name}</option>
@@ -77,13 +77,13 @@ export default function ScaleExplorer({ octave, bpm, transposition }: ScaleExplo
         <div className="flex gap-2">
           <button
             onClick={isPlaying ? stop : handlePlayAscending}
-            className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium"
+            className="px-4 py-1.5 rounded bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium"
           >
             {isPlaying ? "Stop" : "Play Ascending"}
           </button>
           <button
             onClick={isPlaying ? stop : handlePlayDescending}
-            className="px-4 py-1.5 rounded bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium"
+            className="px-4 py-1.5 rounded bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium"
             disabled={isPlaying}
           >
             Play Descending
@@ -99,10 +99,10 @@ export default function ScaleExplorer({ octave, bpm, transposition }: ScaleExplo
         onNoteClick={handleNoteClick}
       />
 
-      <div className="mt-3 text-sm text-gray-400">
-        <span className="font-medium text-gray-300">{root} {scale.name}:</span>{" "}
+      <div className="mt-3 text-sm text-gray-500">
+        <span className="font-medium text-gray-700">{root} {scale.name}:</span>{" "}
         {scaleNotes.join(" – ")}
-        <span className="ml-4 text-gray-500">
+        <span className="ml-4 text-gray-400">
           Formula: {scale.intervals.join(" ")}
         </span>
       </div>
