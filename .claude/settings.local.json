@@ -14,7 +14,8 @@
       "Bash(timeout 5 npm run dev:*)",
       "Bash(npm run dev:*)",
       "Bash(git init:*)",
-      "Bash(git commit --amend -m \"$\\(cat <<''EOF''\nTHIS IS A CHECKPOINT, LOOKING GOOD SO FAR\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")"
+      "Bash(git commit --amend -m \"$\\(cat <<''EOF''\nTHIS IS A CHECKPOINT, LOOKING GOOD SO FAR\n\nCo-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(git add -A)"
     ]
   }
 }
